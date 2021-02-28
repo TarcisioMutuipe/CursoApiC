@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using SmartSchool.API.Data;
 using SmartSchool.API.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -13,43 +14,24 @@ namespace SmartSchool.API.Controllers
     [ApiController]
     public class AlunosController : ControllerBase
     {
-        public List<Aluno> Alunos = new List<Aluno>()
+        private readonly SmartContext _context;
+        public AlunosController(SmartContext context)
         {
-            new Aluno()
-            {
-                Id = 1,
-                Nome ="Marcos",
-                SobreNome="Silva",
-                Telefone = "71988612407"
-            },
-        new Aluno()
-        {
-            Id = 2,
-                Nome = "Lana",
-                 SobreNome="Moura",
-                Telefone = "71988612407"
-            },
-        new Aluno()
-        {
-            Id = 3,
-                Nome = "João",
-                 SobreNome="Cerol",
-                Telefone = "71988612407"
+            _context = context;
+        }
 
-            },
-        };
         // GET: api/<AlunosController>
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(Alunos);
+            return Ok(_context.Alunos);
         }
 
         // GET api/<AlunosController>/5
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            var aluno = Alunos.FirstOrDefault(x => x.Id == id);
+            var aluno = _context.Alunos.FirstOrDefault(x => x.Id == id);
             if (aluno == null)
             {
                 return BadRequest("O Aluno não foi Encontrado");
@@ -59,9 +41,9 @@ namespace SmartSchool.API.Controllers
 
         // GET api/<AlunosController>/5
         [HttpGet("byName")]
-        public IActionResult Get(string name,string sobrenome)
+        public IActionResult Get(string name, string sobrenome)
         {
-            var aluno = Alunos.FirstOrDefault(x => x.Nome == name);
+            var aluno = _context.Alunos.FirstOrDefault(x => x.Nome == name);
             if (aluno == null)
             {
                 return BadRequest("O Aluno não foi Encontrado");
