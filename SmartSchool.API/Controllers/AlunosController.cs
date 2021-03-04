@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SmartSchool.API.Data;
 using SmartSchool.API.Models;
 
@@ -41,7 +42,7 @@ namespace SmartSchool.API.Controllers
 
         // GET api/<AlunosController>/5
         [HttpGet("byName")]
-        public IActionResult Get(string name, string sobrenome)
+        public IActionResult Get(string name)
         {
             var aluno = _context.Alunos.FirstOrDefault(x => x.Nome == name);
             if (aluno == null)
@@ -55,6 +56,8 @@ namespace SmartSchool.API.Controllers
         [HttpPost]
         public IActionResult Post(Aluno aluno)
         {
+            _context.Add(aluno);
+            _context.SaveChanges();
             return Ok(aluno);
         }
 
@@ -62,18 +65,30 @@ namespace SmartSchool.API.Controllers
         [HttpPut("{id}")]
         public IActionResult Put(int id, Aluno aluno)
         {
+            var alu = _context.Alunos.AsNoTracking().FirstOrDefault(a => a.Id == id);
+            if (alu == null) return BadRequest("Aluno não encontrado.");
+            _context.Update(aluno);
+            _context.SaveChanges();
             return Ok(aluno);
         }
         // Patch api/<AlunosController>/5
         [HttpPatch("{id}")]
         public IActionResult Patch(int id, Aluno aluno)
         {
+            var alu = _context.Alunos.AsNoTracking().FirstOrDefault(a => a.Id == id);
+            if (alu == null) return BadRequest("Aluno não encontrado.");
+            _context.Update(aluno);
+            _context.SaveChanges();
             return Ok(aluno);
         }
         // DELETE api/<AlunosController>/5
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
+            var aluno = _context.Alunos.FirstOrDefault(a => a.Id == id);
+            if(aluno == null) return BadRequest("Aluno não encontrado.");
+            _context.Remove(aluno);
+            _context.SaveChanges();
             return Ok();
         }
     }
