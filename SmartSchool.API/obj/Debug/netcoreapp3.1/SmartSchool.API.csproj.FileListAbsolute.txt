@@ -7,7 +7,6 @@ C:\Projetos\SmartSchool\SmartSchool.API\bin\Debug\netcoreapp3.1\SmartSchool.API.
 C:\Projetos\SmartSchool\SmartSchool.API\bin\Debug\netcoreapp3.1\SmartSchool.API.runtimeconfig.dev.json
 C:\Projetos\SmartSchool\SmartSchool.API\bin\Debug\netcoreapp3.1\SmartSchool.API.dll
 C:\Projetos\SmartSchool\SmartSchool.API\bin\Debug\netcoreapp3.1\SmartSchool.API.pdb
-C:\Projetos\SmartSchool\SmartSchool.API\obj\Debug\netcoreapp3.1\SmartSchool.API.csprojAssemblyReference.cache
 C:\Projetos\SmartSchool\SmartSchool.API\obj\Debug\netcoreapp3.1\SmartSchool.API.AssemblyInfoInputs.cache
 C:\Projetos\SmartSchool\SmartSchool.API\obj\Debug\netcoreapp3.1\SmartSchool.API.AssemblyInfo.cs
 C:\Projetos\SmartSchool\SmartSchool.API\obj\Debug\netcoreapp3.1\SmartSchool.API.RazorTargetAssemblyInfo.cache
@@ -46,3 +45,10 @@ C:\Projetos\SmartSchool\SmartSchool.API\bin\Debug\netcoreapp3.1\runtimes\win-x86
 C:\Projetos\SmartSchool\SmartSchool.API\obj\Debug\netcoreapp3.1\SmartSchool.API.csproj.CoreCompileInputs.cache
 C:\Projetos\SmartSchool\SmartSchool.API\obj\Debug\netcoreapp3.1\SmartSchool.API.MvcApplicationPartsAssemblyInfo.cache
 C:\Projetos\SmartSchool\SmartSchool.API\obj\Debug\netcoreapp3.1\SmartSchool.API.csproj.CopyComplete
+C:\Projetos\SmartSchool\SmartSchool.API\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.JsonPatch.dll
+C:\Projetos\SmartSchool\SmartSchool.API\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+C:\Projetos\SmartSchool\SmartSchool.API\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll
+C:\Projetos\SmartSchool\SmartSchool.API\bin\Debug\netcoreapp3.1\Newtonsoft.Json.Bson.dll
+C:\Projetos\SmartSchool\SmartSchool.API\obj\Debug\netcoreapp3.1\SmartSchool.API.csprojAssemblyReference.cache
+C:\Projetos\SmartSchool\SmartSchool.API\bin\Debug\netcoreapp3.1\AutoMapper.dll
+C:\Projetos\SmartSchool\SmartSchool.API\bin\Debug\netcoreapp3.1\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
