@@ -91,7 +91,7 @@ namespace SmartSchool.API.Data
                     .ThenInclude(y => y.AlunosDisciplinas)
                     .ThenInclude(u => u.Aluno);
             }
-            query.AsNoTracking().OrderBy(x => x.Nome);
+            query = query.AsNoTracking().OrderBy(x => x.Nome);
 
             return query.ToArray();
         }
@@ -107,13 +107,13 @@ namespace SmartSchool.API.Data
                     .ThenInclude(u => u.Aluno);
             }
             // query.AsNoTracking().OrderBy(x => x.Nome).Where(o=>o.Disciplina.Any(p=>p.Id == disciplinaId));
-            query.AsNoTracking().OrderBy(x => x.Nome).Where(aluno => aluno.Disciplinas
+            query = query.AsNoTracking().OrderBy(x => x.Nome).Where(aluno => aluno.Disciplinas
             .Any(o => o.AlunosDisciplinas.Any(p => p.DisciplinaId == disciplinaId)
             ));
             return query.ToArray();
         }
 
-        public Professor GetProfessoresById(int id, bool incluirAlunos)
+        public Professor GetProfessorById(int id, bool incluirAlunos)
         {
             IQueryable<Professor> query = _context.Professores;
 
@@ -122,8 +122,9 @@ namespace SmartSchool.API.Data
                 query = query.Include(x => x.Disciplinas)
                     .ThenInclude(y => y.AlunosDisciplinas)
                     .ThenInclude(u => u.Aluno);
-            }
-            query.AsNoTracking().OrderBy(x => x.Nome).Where(prof => prof.Id == id);
+            }       
+
+            query = query.AsNoTracking().OrderBy(x => x.Id).Where(prof => prof.Id == id);
 
             return query.FirstOrDefault();
         }
