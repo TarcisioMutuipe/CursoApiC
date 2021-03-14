@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
@@ -42,6 +44,41 @@ namespace SmartSchool.API
 
             services.AddScoped<IRepository, Repository>();
 
+            services.AddSwaggerGen(
+                opt =>
+                {
+                opt.SwaggerDoc(
+                    "SmartSchoolAPI",
+                    new Microsoft.OpenApi.Models.OpenApiInfo()
+                    {
+                        Title=" SmartSchool API",
+                        Version = "1.0",
+                        TermsOfService= new Uri("http://Tarcisio.com"),
+                        Description = "A Escola do Futuro",
+                        License = new Microsoft.OpenApi.Models.OpenApiLicense()
+                        { 
+                            Name = "Smart License",
+                            Url= new Uri("http://mit.com")
+                        },
+                        Contact = new Microsoft.OpenApi.Models.OpenApiContact()
+                        { 
+                            Name = "Tarcisio",
+                            Email  ="tarcisiusantos@gmail.com"                            
+                        },
+                   
+                       
+                });
+                    new Microsoft.OpenApi.Models.OpenApiInfo()
+                    {
+                        Title = "SmartSchool API",
+                        Version = "1.0"
+                    };
+                    var xmlCommentario = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                    var xmlComentarioCaminho = Path.Combine(AppContext.BaseDirectory, xmlCommentario);
+
+                    opt.IncludeXmlComments(xmlComentarioCaminho);
+                });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,6 +91,14 @@ namespace SmartSchool.API
 
             app.UseRouting();
 
+            app.UseSwagger()
+                .UseSwaggerUI(options =>
+                {
+                    options.SwaggerEndpoint("/swagger/SmartSchoolAPI/swagger.json", "smartschoolapi");
+                    options.RoutePrefix = "";
+
+                });
+                
           //  app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

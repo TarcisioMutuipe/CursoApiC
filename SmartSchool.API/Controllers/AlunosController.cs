@@ -7,12 +7,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SmartSchool.API.Data;
 using SmartSchool.API.Dtos;
+using SmartSchool.API.Helpers;
 using SmartSchool.API.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace SmartSchool.API.Controllers
 {
+    /// <summary>
+    /// Classe Aluno
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class AlunosController : ControllerBase
@@ -28,14 +32,22 @@ namespace SmartSchool.API.Controllers
             _repo = repo;
         }
 
-
+        /// <summary>
+        /// Método responsável por retornar todos alunos
+        /// </summary>
+        /// <returns></returns>
         // GET: api/<AlunosController>
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get([FromQuery] PageParams pageParams)
         {
-            var result = _repo.GetAllAlunos(true );
-                      
-            return Ok(_mapper.Map<IEnumerable<AlunoDto>>(result));
+          
+            var alunos = await _repo.GetAllAlunosAsync(pageParams, true);
+
+            var alunosResult = _mapper.Map<IEnumerable<AlunoDto>>(alunos);
+
+            Response.AddPagination(alunos.CurrentPage, alunos.PageSize, alunos.TotalCount, alunos.TotalPages);
+
+            return Ok(alunosResult);
         }
 
         [HttpGet("getRegister")]
@@ -44,6 +56,11 @@ namespace SmartSchool.API.Controllers
             return Ok(new AlunoRegistrarDto());
         }
 
+        /// <summary>
+        /// Método para retornar um aluno
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         // GET api/<AlunosController>/5
         [HttpGet("{id}")]
         public IActionResult Get(int id)

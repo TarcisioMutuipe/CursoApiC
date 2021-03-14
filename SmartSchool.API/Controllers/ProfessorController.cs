@@ -26,7 +26,10 @@ namespace SmartSchool.API.Controllers
             _mapper = mapper;
             _repo = repo;
         }
-
+        /// <summary>
+        /// Retorna todos Professores.
+        /// </summary>
+        /// <returns></returns>
         // GET: api/<ProfessorController>
         [HttpGet]
         public IActionResult Get()
@@ -36,6 +39,11 @@ namespace SmartSchool.API.Controllers
             return Ok(_mapper.Map<IEnumerable<ProfessorDto>>(result));
         }
 
+        /// <summary>
+        /// Retorna um Professor específico
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         // GET api/<ProfessorController>/5
         [HttpGet("{id}")]
         public IActionResult Get(int id)

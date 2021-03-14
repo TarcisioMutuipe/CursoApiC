@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SmartSchool.API</name>
+    </assembly>
+    <members>
+        <member name="T:SmartSchool.API.Controllers.AlunosController">
+            <summary>
+            Classe Aluno
+            </summary>
+        </member>
+        <member name="M:SmartSchool.API.Controllers.AlunosController.Get(SmartSchool.API.Helpers.PageParams)">
+            <summary>
+            Método responsável por retornar todos alunos
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SmartSchool.API.Controllers.AlunosController.Get(System.Int32)">
+            <summary>
+            Método para retornar um aluno
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartSchool.API.Controllers.ProfessorController.Get">
+            <summary>
+            Retorna todos Professores.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SmartSchool.API.Controllers.ProfessorController.Get(System.Int32)">
+            <summary>
+            Retorna um Professor específico
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
