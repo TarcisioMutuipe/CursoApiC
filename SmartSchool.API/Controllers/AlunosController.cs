@@ -117,6 +117,23 @@ namespace SmartSchool.API.Controllers
             }
             return BadRequest("Aluno não cadastrado.");
         }
+
+
+        // Api/Aluno/{id}/trocaestado
+        [HttpPatch("{id}")]
+        public IActionResult Patch(int id, TrocaEstadoDto trocaEstado)
+        {
+            var alu = _repo.GetAlunoById(id);
+            if (alu == null) return BadRequest("Aluno não encontrado.");
+            _mapper.Map(alunoD, alu);
+
+            _repo.Update(alu);
+            if (_repo.SaveChanges())
+            {
+                return Created($"/api/aluno/{alunoD.Id}", _mapper.Map<AlunoDto>(alu));
+            }
+            return BadRequest("Aluno não cadastrado.");
+        }
         // DELETE api/<AlunosController>/5
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)

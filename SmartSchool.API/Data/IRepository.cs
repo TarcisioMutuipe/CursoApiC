@@ -1,5 +1,6 @@
 ﻿using SmartSchool.API.Helpers;
 using SmartSchool.API.Models;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -25,5 +26,13 @@ namespace SmartSchool.API.Data
         Professor[] GetAllProfessores(bool incluirAlunos = false);
         Professor[] GetAllProfessoresByDisciplinaId(int id, bool incluirAlunos = false);
         Professor GetProfessorById(int professorid, bool incluirAlunos = false);
+
+        void GravarFluxo();
+        String[] GetAllAcoesSigla();
+
+         int GetIdAcao(string acao);
+
+         Professor[] GetProfessorByAlunoId (int Alunoid, bool incluirAlunos = false);
+
     }
 }

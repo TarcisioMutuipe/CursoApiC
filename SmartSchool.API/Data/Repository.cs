@@ -80,6 +80,24 @@ namespace SmartSchool.API.Data
             query = query.AsNoTracking().OrderBy(a => a.Id);
             return  query.ToArray();
         }
+
+        public String[] GetAllAcoesSigla()
+        {
+            
+            IQueryable<AcoesInfo> query = _context.AcoesInfo;
+
+            var querys = query.AsNoTracking().OrderBy(a => a.Id).Select(x => x.Sigla).Distinct();
+            return querys.ToArray();
+        }
+
+        public int GetIdAcao(string acao)
+        {
+
+            IQueryable<AcoesInfo> query = _context.AcoesInfo;
+
+            var IdAcao = query.AsNoTracking().Where(x => x.Sigla.Equals(acao)).Select(a=>a.Id).FirstOrDefault();
+            return IdAcao;
+        }
         public Aluno[] GetAllAlunosByDisciplinaId(int disciplinaId, bool includeProfessor = false)
         {
             IQueryable<Aluno> query = _context.Alunos;
@@ -143,7 +161,7 @@ namespace SmartSchool.API.Data
             return query.ToArray();
         }
 
-        public Professor GetProfessorById(int id, bool incluirAlunos)
+        public Professor GetProfessorById(int id, bool incluirAlunos = false)
         {
             IQueryable<Professor> query = _context.Professores;
 
@@ -159,6 +177,28 @@ namespace SmartSchool.API.Data
             return query.FirstOrDefault();
         }
 
+         public Professor[] GetProfessorByAlunoId (int Alunoid, bool incluirAlunos = false)
+        {
+            IQueryable<Professor> query = _context.Professores;
 
+            if (incluirAlunos)
+            {
+                query = query.Include(x => x.Disciplinas)
+                    .ThenInclude(y => y.AlunosDisciplinas)
+                    .ThenInclude(u => u.Aluno);
+            }       
+
+            query = query.AsNoTracking().OrderBy(x => x.Id).Where(aluno => aluno.Disciplinas
+            .Any(o => o.AlunosDisciplinas.Any(p => p.AlunoId == Alunoid)
+            ));
+
+            return query.ToArray();
+        }
+
+
+        public void GravarFluxo()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

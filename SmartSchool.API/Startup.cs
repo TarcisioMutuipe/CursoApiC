@@ -78,6 +78,7 @@ namespace SmartSchool.API
 
                     opt.IncludeXmlComments(xmlComentarioCaminho);
                 });
+                services.AddCors();
 
         }
 
@@ -90,7 +91,7 @@ namespace SmartSchool.API
             }
 
             app.UseRouting();
-
+            app.UseCors(x=> x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             app.UseSwagger()
                 .UseSwaggerUI(options =>
                 {

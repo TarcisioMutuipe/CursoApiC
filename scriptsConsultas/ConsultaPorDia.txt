@@ -1,0 +1,23 @@
+
+#Consulta que ordena pelo maior fluxo percentualmente no dia pelas corretoras estrangeiras
+SELECT SUM(ff.volume), Descricao,Data ,VARD,acoes.datapregao ,sigla,acoes.Volume, Round((ABS(SUM(ff.volume))/acoes.Volume),2)
+ FROM fluxobolsa ff inner join acoesInfo ac 
+on (ff.AcoesInfoId = ac.Id )
+inner join Acoes acoes on(acoes.AcoesInfoId = ac.id and data = DataPregao)
+where codCorretora in('040', '016', '238', '238', '045', '013', '008') and DataPregao = '2021-04-23'
+group by  Descricao, Data,acoes.volume, vard,acoes.DataPregao,acoes.Volume
+having SUM(ff.volume) < 0 and ABS(SUM(ff.volume)) > acoes.volume * 0.01
+order by Round((ABS(SUM(ff.volume))/acoes.Volume),2) desc, data desc, Descricao
+
+
+
+#Consulta maior fluxo de varios dias definindo a data do pregão
+
+SELECT SUM(ff.volume), Descricao,VARD,sigla,acoes.Volume, Round((ABS(SUM(ff.volume))/acoes.Volume),2)
+ FROM fluxobolsa ff inner join acoesInfo ac 
+on (ff.AcoesInfoId = ac.Id )
+inner join Acoes acoes on(acoes.AcoesInfoId = ac.id and data = DataPregao)
+where codCorretora in('040', '016', '238', '238', '045', '013', '008') and DataPregao BETWEEN '2021-04-21' and '2021-04-23'
+group by  Descricao, Data,acoes.volume, vard,acoes.DataPregao,acoes.Volume
+having SUM(ff.volume) < 0 and ABS(SUM(ff.volume)) > acoes.volume * 0.01
+order by Round((ABS(SUM(ff.volume))/acoes.Volume),2) desc, Descricao

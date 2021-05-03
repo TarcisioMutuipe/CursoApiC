@@ -20,6 +20,8 @@ namespace SmartSchool.API.Helpers
                 opt => opt.MapFrom(src => src.DataNasc.GetCurrentAge())
                 );
             CreateMap<AlunoDto, Aluno>();
+            CreateMap<FluxoBolsaDto, FluxoBolsa>();
+            CreateMap<FluxoBolsa, FluxoBolsaDto>().ReverseMap();
             CreateMap<Aluno, AlunoRegistrarDto>().ReverseMap();
             CreateMap<Professor, ProfessorDto>().ReverseMap();
             CreateMap<Professor, ProfessorRegistrarDto>().ReverseMap();
