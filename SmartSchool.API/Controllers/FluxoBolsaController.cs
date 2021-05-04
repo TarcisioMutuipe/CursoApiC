@@ -39,7 +39,7 @@ namespace SmartSchool.API.Controllers
             foreach (var item in acoes)
             {
 
-                var pathArquivo = @"D:\CompradoreseVendedores\30042021\" + item + ".csv";
+                var pathArquivo = @"D:\CompradoreseVendedores\03052021\" + item + ".csv";
                 if (System.IO.File.Exists(pathArquivo))
                 {
 
@@ -65,7 +65,7 @@ namespace SmartSchool.API.Controllers
                                 NumNegocio = 0,
                                 PrecoMedio = Convert.ToDecimal(partes[6]),
                                 AcoesInfoId = _repo.GetIdAcao(item),
-                                Data = Convert.ToDateTime("30/04/2021"),
+                                Data = Convert.ToDateTime("03/05/2021"),
                             };
 
                             var acoesModel = _mapper.Map<FluxoBolsa>(fluxo);

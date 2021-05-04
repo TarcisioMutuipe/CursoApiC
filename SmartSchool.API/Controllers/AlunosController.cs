@@ -102,21 +102,21 @@ namespace SmartSchool.API.Controllers
             }
             return BadRequest("Aluno não cadastrado.");
         }
-        // Patch api/<AlunosController>/5
-        [HttpPatch("{id}")]
-        public IActionResult Patch(int id, AlunoRegistrarDto alunoD)
-        {
-            var alu = _repo.GetAlunoById(id);
-            if (alu == null) return BadRequest("Aluno não encontrado.");
-            _mapper.Map(alunoD, alu);
+        //// Patch api/<AlunosController>/5
+        //[HttpPatch("{id}")]
+        //public IActionResult Patch(int id, AlunoRegistrarDto alunoD)
+        //{
+        //    var alu = _repo.GetAlunoById(id);
+        //    if (alu == null) return BadRequest("Aluno não encontrado.");
+        //    _mapper.Map(alunoD, alu);
 
-            _repo.Update(alu);
-            if (_repo.SaveChanges())
-            {
-                return Created($"/api/aluno/{alunoD.Id}", _mapper.Map<AlunoDto>(alu));
-            }
-            return BadRequest("Aluno não cadastrado.");
-        }
+        //    _repo.Update(alu);
+        //    if (_repo.SaveChanges())
+        //    {
+        //        return Created($"/api/aluno/{alunoD.Id}", _mapper.Map<AlunoDto>(alu));
+        //    }
+        //    return BadRequest("Aluno não cadastrado.");
+        //}
 
 
         // Api/Aluno/{id}/trocaestado
@@ -125,12 +125,12 @@ namespace SmartSchool.API.Controllers
         {
             var alu = _repo.GetAlunoById(id);
             if (alu == null) return BadRequest("Aluno não encontrado.");
-            _mapper.Map(alunoD, alu);
+           // _mapper.Map(alunoD, alu);
 
             _repo.Update(alu);
             if (_repo.SaveChanges())
             {
-                return Created($"/api/aluno/{alunoD.Id}", _mapper.Map<AlunoDto>(alu));
+            //return Created($"/api/aluno/{alunoD.Id}", _mapper.Map<AlunoDto>(alu));
             }
             return BadRequest("Aluno não cadastrado.");
         }

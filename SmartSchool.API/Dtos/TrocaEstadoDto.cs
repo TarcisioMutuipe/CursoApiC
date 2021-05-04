@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SmartSchool.API.Dtos
 {
-    public class TrocaEstado
+    public class TrocaEstadoDto
     {
     }
 }

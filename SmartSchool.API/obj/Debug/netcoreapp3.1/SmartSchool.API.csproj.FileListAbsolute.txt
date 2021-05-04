@@ -1,8 +1,3 @@
-C:\Projetos\SmartSchool\SmartSchool.API\obj\Debug\netcoreapp3.1\SmartSchool.API.AssemblyInfoInputs.cache
-C:\Projetos\SmartSchool\SmartSchool.API\obj\Debug\netcoreapp3.1\SmartSchool.API.AssemblyInfo.cs
-C:\Projetos\SmartSchool\SmartSchool.API\obj\Debug\netcoreapp3.1\SmartSchool.API.csproj.CoreCompileInputs.cache
-C:\Projetos\SmartSchool\SmartSchool.API\obj\Debug\netcoreapp3.1\SmartSchool.API.MvcApplicationPartsAssemblyInfo.cs
-C:\Projetos\SmartSchool\SmartSchool.API\obj\Debug\netcoreapp3.1\SmartSchool.API.MvcApplicationPartsAssemblyInfo.cache
 C:\Projetos\SmartSchool\SmartSchool.API\bin\Debug\netcoreapp3.1\appsettings.Development.json
 C:\Projetos\SmartSchool\SmartSchool.API\bin\Debug\netcoreapp3.1\appsettings.json
 C:\Projetos\SmartSchool\SmartSchool.API\bin\Debug\netcoreapp3.1\libman.json
@@ -36,6 +31,11 @@ C:\Projetos\SmartSchool\SmartSchool.API\bin\Debug\netcoreapp3.1\Pomelo.JsonObjec
 C:\Projetos\SmartSchool\SmartSchool.API\bin\Debug\netcoreapp3.1\Swashbuckle.AspNetCore.Swagger.dll
 C:\Projetos\SmartSchool\SmartSchool.API\bin\Debug\netcoreapp3.1\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Projetos\SmartSchool\SmartSchool.API\bin\Debug\netcoreapp3.1\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Projetos\SmartSchool\SmartSchool.API\obj\Debug\netcoreapp3.1\SmartSchool.API.AssemblyInfoInputs.cache
+C:\Projetos\SmartSchool\SmartSchool.API\obj\Debug\netcoreapp3.1\SmartSchool.API.AssemblyInfo.cs
+C:\Projetos\SmartSchool\SmartSchool.API\obj\Debug\netcoreapp3.1\SmartSchool.API.csproj.CoreCompileInputs.cache
+C:\Projetos\SmartSchool\SmartSchool.API\obj\Debug\netcoreapp3.1\SmartSchool.API.MvcApplicationPartsAssemblyInfo.cs
+C:\Projetos\SmartSchool\SmartSchool.API\obj\Debug\netcoreapp3.1\SmartSchool.API.MvcApplicationPartsAssemblyInfo.cache
 C:\Projetos\SmartSchool\SmartSchool.API\obj\Debug\netcoreapp3.1\SmartSchool.API.RazorTargetAssemblyInfo.cache
 C:\Projetos\SmartSchool\SmartSchool.API\obj\Debug\netcoreapp3.1\SmartSchool.API.csproj.CopyComplete
 C:\Projetos\SmartSchool\SmartSchool.API\obj\Debug\netcoreapp3.1\staticwebassets\SmartSchool.API.StaticWebAssets.Manifest.cache
@@ -43,4 +43,3 @@ C:\Projetos\SmartSchool\SmartSchool.API\obj\Debug\netcoreapp3.1\staticwebassets\
 C:\Projetos\SmartSchool\SmartSchool.API\obj\Debug\netcoreapp3.1\SmartSchool.API.dll
 C:\Projetos\SmartSchool\SmartSchool.API\obj\Debug\netcoreapp3.1\SmartSchool.API.pdb
 C:\Projetos\SmartSchool\SmartSchool.API\obj\Debug\netcoreapp3.1\SmartSchool.API.genruntimeconfig.cache
-C:\Projetos\SmartSchool\SmartSchool.API\obj\Debug\netcoreapp3.1\SmartSchool.API.csprojAssemblyReference.cache
