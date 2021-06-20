@@ -10,3 +10,7 @@
 #toast-container > div {
     opacity: 1;
 }
+
+.form-group{
+  margin-left: 10px;
+}

@@ -15,5 +15,7 @@ namespace SmartSchool.API.Dtos
         public DateTime? DataFim { get; set; } = null;
         public bool Ativo { get; set; } = true;
 
+        public IEnumerable<DisciplinaDto> Disciplinas { get; set; }
+
     }
 }

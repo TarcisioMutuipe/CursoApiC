@@ -1,3 +1,4 @@
+import { Pagination, PaginatedResult } from './../../models/Pagination';
 import { Component, OnInit, TemplateRef, OnDestroy } from '@angular/core';
 import { Aluno } from '../../models/Aluno';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -10,6 +11,7 @@ import { Subject } from 'rxjs';
 import { ProfessorService } from '../../services/professor.service';
 import { Professor } from '../../models/Professor';
 import { ActivatedRoute } from '@angular/router';
+
 
 @Component({
   selector: 'app-alunos',
@@ -31,6 +33,7 @@ export class AlunosComponent implements OnInit, OnDestroy {
   public aluno!: Aluno;
   public msnDeleteAluno!: string;
   public modeSave: string = 'post';
+  public pagination!: Pagination;
 
   constructor(
     private alunoService: AlunoService,
@@ -43,7 +46,7 @@ export class AlunosComponent implements OnInit, OnDestroy {
   ) {
     this.criarForm();
   }
-  
+
 
 
   professoresAlunos(template: TemplateRef<any>, id: number) {
@@ -62,6 +65,7 @@ export class AlunosComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.pagination = { currentPage: 1, itemsPerPage: 4} as Pagination;
     this.carregarAlunos();
   }
 
@@ -70,7 +74,8 @@ export class AlunosComponent implements OnInit, OnDestroy {
       id: [0],
       nome: ['', Validators.required],
       sobrenome: ['', Validators.required],
-      telefone: ['', Validators.required]
+      telefone: ['', Validators.required],
+      ativo:[]
     });
   }
 
@@ -84,7 +89,7 @@ export class AlunosComponent implements OnInit, OnDestroy {
         this.aluno = {id: this.alunoSelecionado.id, ...this.alunoForm.value};
       }
 
-      this.alunoService[this.modeSave](this.aluno) 
+      this.alunoService[this.modeSave](this.aluno)
         .pipe(takeUntil(this.unsubscriber))
         .subscribe(
           () => {
@@ -102,10 +107,11 @@ export class AlunosComponent implements OnInit, OnDestroy {
 
     trocaEstado(aluno): void {
 
-      this.alunoService.trocarEstado(aluno.id, aluno.ativo) 
+      this.alunoService.trocarEstado(aluno.id, !aluno.ativo)
       .pipe(takeUntil(this.unsubscriber))
       .subscribe(
-        () => {
+        (resp) => {
+          console.log(resp);
           this.carregarAlunos();
           this.toastr.success('Aluno salvo com sucesso!');
         }, (error: any) => {
@@ -120,10 +126,12 @@ export class AlunosComponent implements OnInit, OnDestroy {
     const alunoId = Number(this.route.snapshot.paramMap.get('id'));
 
     this.spinner.show();
-    this.alunoService.getAll()
+    this.alunoService.getAll(this.pagination.currentPage, this.pagination.itemsPerPage)
       .pipe(takeUntil(this.unsubscriber))
-      .subscribe((alunos: Aluno[]) => {
-        this.alunos = alunos;
+      .subscribe((alunos: PaginatedResult<Aluno[]>) => {
+        this.alunos = alunos.result;
+        this.pagination = alunos.pagination;
+        console.log(this.alunos);
 
         if (alunoId > 0) {
           this.alunoSelect(alunoId);
@@ -138,11 +146,18 @@ export class AlunosComponent implements OnInit, OnDestroy {
     );
   }
 
+  pageChanged(event: any): void {
+  this.pagination.currentPage = event.page;
+  this.carregarAlunos();
+  }
+
+
+
   alunoSelect(alunoId: number):void {
-    this.modeSave = 'put';
+    this.modeSave = 'patch';
     this.alunoService.getById(alunoId).subscribe(
       (alunoReturn)=>{
-        this.alunoSelecionado = alunoReturn;        
+        this.alunoSelecionado = alunoReturn;
         this.alunoForm.patchValue(this.alunoSelecionado);
       },
       (error) => {

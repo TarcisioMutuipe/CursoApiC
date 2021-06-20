@@ -1,10 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MySql.Data.MySqlClient;
+using SmartSchool.API.Dtos;
 using SmartSchool.API.Helpers;
 using SmartSchool.API.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+
 
 namespace SmartSchool.API.Data
 {
@@ -12,8 +17,10 @@ namespace SmartSchool.API.Data
     {
         private readonly SmartContext _context;
 
-        public Repository(SmartContext context)
+        public IConfiguration Configuration { get; }
+        public Repository(SmartContext context, IConfiguration configuration)
         {
+            Configuration = configuration;
             _context = context;
         }
         public void Add<T>(T entity) where T : class
@@ -90,6 +97,110 @@ namespace SmartSchool.API.Data
             return querys.ToArray();
         }
 
+        public DataTable GetFluxoDias(DateTime dataInicio, DateTime dataFim, string Sigla)
+        {
+            var mConn = new MySql.Data.MySqlClient.MySqlConnection(Configuration.GetConnectionString("MySqlConnection"));
+            try
+            {
+                //abre a conexao
+                mConn.Open();
+            }
+            catch (System.Exception e)
+            {
+                return null;
+            }
+            if (mConn.State == ConnectionState.Open)
+            {
+                var mAdapter = new MySqlDataAdapter(
+                 String.Format("set @dataIni = '{0} ' ;", dataInicio.ToString("yyyy-MM-dd")) +
+                  String.Format("set @dataFim = '{0}' ;", dataFim.ToString("yyyy-MM-dd")) +
+                   String.Format("set @Sigla = '{0}' ;", Sigla) +
+                       @"SELECT Descricao,Sigla,SUM(ff.volume), 
+                            Round((SUM(ff.volume)/(select sum(volume) from acoes abc where abc.datapregao = acoes.datapregao
+                            and abc.AcoesInfoId = acoes.AcoesInfoId)),2) as Taxa,
+                            (select sum(volume) from acoes abc where datapregao = acoes.datapregao
+                            and abc.AcoesInfoId = acoes.AcoesInfoId)as Volume
+                            ,acoes.datapregao
+                             FROM fluxobolsa ff inner join acoesInfo ac 
+                            on (ff.AcoesInfoId = ac.Id )
+                            inner join Acoes acoes on(acoes.AcoesInfoId = ac.id and data = DataPregao)
+                            where codCorretora in('040', '016', '238', '072', '045', '013', '008') 
+                            and data BETWEEN @dataIni and @dataFim
+                            and sigla = @Sigla
+                            group by  Descricao,acoes.datapregao
+                            
+                            order by SIGLA,DataPregao ASC,Taxa desc", mConn);
+
+                var datax = new DataSet();
+                RetornoFluxoDto retornof = new RetornoFluxoDto();
+                mAdapter.Fill(datax, "Fluxo");
+                return datax.Tables[0];
+            }
+            else return null;
+        }
+
+        public DataTable GetFluxoCorretoras(DateTime dataInicio, DateTime dataFim, string Sigla)
+        {
+            var mConn = new MySql.Data.MySqlClient.MySqlConnection(Configuration.GetConnectionString("MySqlConnection"));
+            try
+            {
+                //abre a conexao
+                mConn.Open();
+            }
+            catch (System.Exception e)
+            {
+                return null;
+            }
+            if (mConn.State == ConnectionState.Open)
+            {
+                var mAdapter = new MySqlDataAdapter(
+                 String.Format("set @dataIni = '{0} ' ;", dataInicio.ToString("yyyy-MM-dd")) +
+                  String.Format("set @dataFim = '{0}' ;", dataFim.ToString("yyyy-MM-dd")) +
+                   String.Format("set @Sigla = '{0}' ;", Sigla) +
+                       @"SELECT Descricao,Sigla,'1-Principais' as Quem,SUM(ff.volume) as volumeTotal,acoes.datapregao
+                             FROM fluxobolsa ff inner join acoesInfo ac 
+                            on (ff.AcoesInfoId = ac.Id )
+                            inner join Acoes acoes on(acoes.AcoesInfoId = ac.id and data = DataPregao)
+                            where codCorretora in('040', '016', '238', '072', '045', '013', '008') 
+                            and data BETWEEN @dataIni and @dataFim
+                            and sigla = @Sigla
+                            group by  Descricao,acoes.datapregao                           
+							Union
+SELECT Descricao,Sigla,'3-Morgan' as Quem,SUM(ff.volume) as volumeTotal,acoes.datapregao
+                             FROM fluxobolsa ff inner join acoesInfo ac 
+                            on (ff.AcoesInfoId = ac.Id )
+                            inner join Acoes acoes on(acoes.AcoesInfoId = ac.id and data = DataPregao)
+                            where codCorretora in('040') 
+                            and data BETWEEN @dataIni and @dataFim
+                            and sigla = @Sigla
+                            group by  Descricao,acoes.datapregao                         
+                            Union
+SELECT Descricao,Sigla,'2-JP Morgan' as Quem,SUM(ff.volume) as volumeTotal,acoes.datapregao
+                             FROM fluxobolsa ff inner join acoesInfo ac 
+                            on (ff.AcoesInfoId = ac.Id )
+                            inner join Acoes acoes on(acoes.AcoesInfoId = ac.id and data = DataPregao)
+                            where codCorretora in('016') 
+                            and data BETWEEN @dataIni and @dataFim
+                            and sigla = @Sigla
+                            group by  Descricao,acoes.datapregao                            
+                            union
+SELECT Descricao,Sigla,'4-Merrill Lynch' as Quem,SUM(ff.volume) as volumeTotal,acoes.datapregao
+                             FROM fluxobolsa ff inner join acoesInfo ac 
+                            on (ff.AcoesInfoId = ac.Id )
+                            inner join Acoes acoes on(acoes.AcoesInfoId = ac.id and data = DataPregao)
+                            where codCorretora in('013') 
+                            and data BETWEEN @dataIni and @dataFim
+                            and sigla = @Sigla
+                            group by  Descricao,acoes.datapregao                            
+                            order by DataPregao ASC, Quem", mConn);
+
+                var datax = new DataSet();
+                RetornoFluxoDto retornof = new RetornoFluxoDto();
+                mAdapter.Fill(datax, "Fluxo");
+                return datax.Tables[0];
+            }
+            else return null;
+        }
         public int GetIdAcao(string acao)
         {
 
@@ -129,6 +240,18 @@ namespace SmartSchool.API.Data
             return query.FirstOrDefault();
         }
 
+        public Aluno[] ByDisciplina(int idDisciplina)
+        {
+            IQueryable<Aluno> query = _context.Alunos;
+
+                query = query.Include(a => a.AlunosDisciplinas)
+                    .ThenInclude(ad => ad.Disciplina)
+                  ;
+
+
+            query = query.AsNoTracking().OrderBy(a => a.Id).Where(aluno => aluno.AlunosDisciplinas.Any(p => p.DisciplinaId == idDisciplina));
+            return query.ToArray();
+        }
         public Professor[] GetAllProfessores(bool incluirAlunos = false)
         {
             IQueryable<Professor> query = _context.Professores;

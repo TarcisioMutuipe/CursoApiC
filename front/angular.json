@@ -26,15 +26,22 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "aot": true,
+            "allowedCommonJsDependencies": ["lodash","chart.js"],
             "assets": [
               "src/favicon.ico",
               "src/assets"
             ],
             "styles": [
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles.css",
               "node_modules/ngx-toastr/toastr.css"
             ],
-            "scripts": []
+            "scripts": [
+              "../node_modules/1js/popper.min.js",
+              "../node_modules/1js/plugins.js",
+              "../node_modules/1js/main.js",
+              "../node_modules/jquery/dist/jquery.js"
+            ]
           },
           "configurations": {
             "production": {

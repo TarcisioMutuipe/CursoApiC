@@ -48,7 +48,7 @@ namespace SmartSchool.API.Controllers
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            var prof = _repo.GetProfessorById(id);
+            var prof = _repo.GetProfessorById(id,true);
             if (prof == null) return BadRequest("Professor não existe.");
 
             var ProfDto = _mapper.Map<ProfessorDto>(prof);
@@ -59,7 +59,7 @@ namespace SmartSchool.API.Controllers
         [HttpGet("byaluno/{alunoId}")]
         public IActionResult GetByAlunoId(int alunoId)
         {
-            var prof = _repo.GetProfessorByAlunoId(alunoId,false);
+            var prof = _repo.GetProfessorByAlunoId(alunoId,true);
             if (prof == null) return BadRequest("Professor não existe.");
        
             return Ok(_mapper.Map<IEnumerable<ProfessorDto>>(prof));

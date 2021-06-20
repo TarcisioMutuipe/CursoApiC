@@ -1,3 +1,5 @@
+import { ProfessorDetalheComponent } from './components/professores/professor-detalhe/professor-detalhe.component';
+import { AlunosProfessoresComponent } from './components/professores/alunos-professores/alunos-professores.component';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
@@ -17,8 +19,9 @@ import { ToastrModule } from  'ngx-toastr'
 import { NgxSpinnerModule } from  'ngx-spinner'
 import { ProfessoresAlunosComponent } from './components/alunos/professores-alunos/professores-alunos/professores-alunos.component';
 import {ChartsModule} from 'ng2-charts';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 @NgModule({
-  declarations: [					
+  declarations: [
     AppComponent,
     AlunosComponent,
       ProfessoresComponent,
@@ -26,7 +29,9 @@ import {ChartsModule} from 'ng2-charts';
       DashboardComponent,
       NavComponent,
       TituloComponent,
-      ProfessoresAlunosComponent
+      ProfessoresAlunosComponent,
+      ProfessorDetalheComponent,
+      AlunosProfessoresComponent
    ],
   imports: [
     BrowserModule,
@@ -41,12 +46,13 @@ import {ChartsModule} from 'ng2-charts';
         preventDuplicates:true,
         progressBar:true,
         closeButton:true
-    }),    
+    }),
     BsDropdownModule.forRoot(),
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
-    ModalModule.forRoot()
+    ModalModule.forRoot(),
+    NgbModule
   ],
   providers: [],
   bootstrap: [AppComponent]

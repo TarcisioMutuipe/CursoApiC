@@ -24,6 +24,7 @@ namespace SmartSchool.API.Data
         public DbSet<AlunoDisciplina> AlunosDisciplinas { get; set; }
 
         public DbSet<AlunoCurso> AlunosCursos { get; set; }
+       
 
         public DbSet<Curso> Curso { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)

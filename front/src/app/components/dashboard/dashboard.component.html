@@ -1,3 +1,37 @@
-<div>
-  <canvas #meuCanvas></canvas>
-</div>
+<form [formGroup]="DashForm">
+  <div class="container">
+    <div class="row">
+      <div class="form-group">
+        <label for="formGroupExampleInput">Data Início</label>
+        <input type="date" formControlName="dataini" class="form-control">
+
+      </div>
+      <div class="form-group">
+        <label for="formGroupExampleInput">Data Fim</label>
+        <input type="date" formControlName="datafim" id="DataFim" class="form-control">
+      </div>
+
+      <div class="form-group">
+        <label for="formGroupExampleInput">Sigla</label>
+        <select class="form-control" id="acoes" formControlName="sigla" class="form-control" ngModel
+          (ngModelChange)="DashBusca()">
+          <option *ngFor="let acoes of acoess" [ngValue]="acoes">{{acoes}}</option>
+
+        </select>
+      </div>
+      <div class="form-group">
+        <hr>
+        <button class="btn btn-success" (click)="DashBusca()">Pesquisar</button>
+      </div>
+
+    </div>
+    <div class="row">
+      <div class="form-group" style="width: 1000;height: 600;">
+        <canvas #meuCanvasDias width="900" height="600"></canvas>
+
+          <canvas #meuCanvasCorretoras width="900" height="600"></canvas>
+
+      </div>
+    </div>
+  </div>
+</form>

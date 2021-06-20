@@ -2171,19 +2171,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Tarcisio\\.nuget\\packages\\": {}
+    "C:\\Users\\jai_m\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Projetos\\SmartSchool\\SmartSchool.API\\SmartSchool.API.csproj",
+      "projectUniqueName": "C:\\Projetos\\SmartScholl\\CursoApiC\\SmartSchool.API\\SmartSchool.API.csproj",
       "projectName": "SmartSchool.API",
-      "projectPath": "C:\\Projetos\\SmartSchool\\SmartSchool.API\\SmartSchool.API.csproj",
-      "packagesPath": "C:\\Users\\Tarcisio\\.nuget\\packages\\",
-      "outputPath": "C:\\Projetos\\SmartSchool\\SmartSchool.API\\obj\\",
+      "projectPath": "C:\\Projetos\\SmartScholl\\CursoApiC\\SmartSchool.API\\SmartSchool.API.csproj",
+      "packagesPath": "C:\\Users\\jai_m\\.nuget\\packages\\",
+      "outputPath": "C:\\Projetos\\SmartScholl\\CursoApiC\\SmartSchool.API\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Tarcisio\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\jai_m\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -2195,6 +2195,7 @@
       },
       "frameworks": {
         "netcoreapp3.1": {
+          "targetAlias": "netcoreapp3.1",
           "projectReferences": {}
         }
       },
@@ -2206,6 +2207,7 @@
     },
     "frameworks": {
       "netcoreapp3.1": {
+        "targetAlias": "netcoreapp3.1",
         "dependencies": {
           "AutoMapper.Extensions.Microsoft.DependencyInjection": {
             "target": "Package",
@@ -2258,7 +2260,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.408\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.301\\RuntimeIdentifierGraph.json"
       }
     }
   }
