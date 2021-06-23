@@ -97,6 +97,15 @@ namespace SmartSchool.API.Data
             return querys.ToArray();
         }
 
+        public String[] GetAllCorretoras()
+        {
+
+            IQueryable<FluxoBolsa> query = _context.FluxoBolsa;
+
+            var querys = query.AsNoTracking().OrderBy(a => a.NomeCorretora).Select(x => x.NomeCorretora).Distinct();
+            return querys.ToArray();
+        }
+
         public DataTable GetFluxoDias(DateTime dataInicio, DateTime dataFim, string Sigla)
         {
             var mConn = new MySql.Data.MySqlClient.MySqlConnection(Configuration.GetConnectionString("MySqlConnection"));
@@ -201,6 +210,105 @@ SELECT Descricao,Sigla,'4-Merrill Lynch' as Quem,SUM(ff.volume) as volumeTotal,a
             }
             else return null;
         }
+
+        public DataTable GetFluxoVolumexVard(DateTime dataInicio, DateTime dataFim, string Sigla)
+        {
+            var mConn = new MySql.Data.MySqlClient.MySqlConnection(Configuration.GetConnectionString("MySqlConnection"));
+            try
+            {
+                //abre a conexao
+                mConn.Open();
+            }
+            catch (System.Exception e)
+            {
+                return null;
+            }
+            if (mConn.State == ConnectionState.Open)
+            {
+                var mAdapter = new MySqlDataAdapter(
+                 String.Format("set @dataIni = '{0} ' ;", dataInicio.ToString("yyyy-MM-dd")) +
+                  String.Format("set @dataFim = '{0}' ;", dataFim.ToString("yyyy-MM-dd")) +
+                   String.Format("set @Sigla = '{0}' ;", Sigla) +
+                       @"SELECT Sigla,codCorretora,NomeCorretora , SUM(case when (ff.volume < 0 and vard > 0) or (ff.volume > 0 and vard < 0) then 1 else 0 end) as ContadorAcerto, Count(data) as TOtalDias,
+ROUND(( SUM(case when (ff.volume < 0 and vard > 0) or (ff.volume > 0 and vard < 0) then 1 else 0 end) / Count(data)) * 100,2) as Porcental
+, ROUND(SUM(ABS(ff.VOLUME))/ Count(data),2) as VolMedioCorretora
+                             FROM fluxobolsa ff inner join acoesInfo ac 
+                            on (ff.AcoesInfoId = ac.Id )
+                            inner join Acoes acoes on(acoes.AcoesInfoId = ac.id and data = DataPregao)
+                            where  data BETWEEN @dataIni and @dataFim
+                            and sigla = @Sigla
+                            group by codCorretora
+                            order by Porcental asc, ContadorAcerto asc", mConn);
+
+                var datax = new DataSet();
+                RetornoFluxoDto retornof = new RetornoFluxoDto();
+                mAdapter.Fill(datax, "Fluxo");
+                return datax.Tables[0];
+            }
+            else return null;
+        }
+
+        public IList<RetornoVariasInfoCorretoras> GetFluxoAcertivas(DateTime dataInicio, DateTime dataFim)
+        {
+            var mConn = new MySql.Data.MySqlClient.MySqlConnection(Configuration.GetConnectionString("MySqlConnection"));
+            try
+            {
+                //abre a conexao
+                mConn.Open();
+            }
+            catch (System.Exception e)
+            {
+                return null;
+            }
+            if (mConn.State == ConnectionState.Open)
+            {
+                var mAdapter = new MySqlCommand(
+                
+              
+                  String.Format("set @Sigla = '{0}' ;", "VVAR3") +
+                       @" SELECT Sigla,codCorretora,NomeCorretora,
+ROUND(( SUM(case when (ff.volume < 0 and vard > 0) or (ff.volume > 0 and vard < 0) then 1 else 0 end) / Count(data)) * 100,2) as Porcental,
+SUM(case when (ff.volume < 0 and vard > 0) or (ff.volume > 0 and vard < 0) then 1 else 0 end) ,
+ ROUND(SUM(ABS(ff.VOLUME))/ Count(data),2) as VolMedioCorretora,ROUND(SUM(ABS(ff.VOLUME))/ Count(data)/(sum(acoes.volume)/Count(data)),3) as Porcentagem
+
+                             FROM fluxobolsa ff inner join acoesInfo ac 
+                            on (ff.AcoesInfoId = ac.Id )
+                            inner join Acoes acoes on(acoes.AcoesInfoId = ac.id and data = DataPregao)
+                            where  data BETWEEN @dataIni and @dataFim                         
+							
+                            group by codCorretora,Sigla
+							having ((SUM(case when (ff.volume < 0 and vard > 0) or (ff.volume > 0 and vard < 0) then 1 else 0 end) / Count(data)) * 100) > 50
+                            and (Count(data)/(Select count(datapregao) from acoes aco inner join acoesInfo ac 
+                            on (aco.AcoesInfoId = ac.Id ) where datapregao BETWEEN @dataIni and @dataFim and @Sigla = Sigla)) = 1
+                          and ROUND(SUM(ABS(ff.VOLUME))/ Count(data)/(sum(acoes.volume)/Count(data)),3) > 0.01
+                            order by Porcental desc ", mConn);
+                mAdapter.Parameters.AddWithValue("@dataIni", dataInicio.ToString("yyyy-MM-dd"));
+                mAdapter.Parameters.AddWithValue("@dataFim", dataFim.ToString("yyyy-MM-dd"));
+                var datax = new DataSet();
+                RetornoFluxoDto retornof = new RetornoFluxoDto();
+                mAdapter.CommandTimeout = 200;
+                MySqlDataReader dr = mAdapter.ExecuteReader(CommandBehavior.CloseConnection);
+               
+                IList<RetornoVariasInfoCorretoras> FluxoRetorno = new List<RetornoVariasInfoCorretoras>();
+
+                while(dr.Read())
+                {
+                    RetornoVariasInfoCorretoras itemFluxo = new RetornoVariasInfoCorretoras();
+                    itemFluxo.Sigla = dr[0].ToString();
+                    itemFluxo.CodCorretora = dr[1].ToString();
+                    itemFluxo.NomeCorretora = dr[2].ToString();
+                    itemFluxo.ContadorAcerto = Convert.ToInt32(dr[3]);
+                    itemFluxo.PercentualAcerto = Convert.ToDecimal(dr[4]);
+                    itemFluxo.VolumeCorretora = Convert.ToDouble(dr[5]);
+                    itemFluxo.PorcentagemVolume = Convert.ToDouble(dr[6]);
+                    FluxoRetorno.Add(itemFluxo);
+                }
+
+                return FluxoRetorno;
+            }
+            else return null;
+        }
+
         public int GetIdAcao(string acao)
         {
 

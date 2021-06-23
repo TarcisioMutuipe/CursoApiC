@@ -1,6 +1,7 @@
 import { BuscaDados } from './../../models/BuscaDados';
 import { DashboardService } from './../../services/dashboard.service';
 import { Dashboard } from '../../models/Dashboard';
+import { GraficoCorretoras } from '../../models/GraficoCorretoras';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Chart } from 'chart.js';
@@ -15,6 +16,8 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Data } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import * as moment from 'moment';
+import { rendererTypeName } from '@angular/compiler';
+import { readJsonConfigFile } from 'typescript';
 
 @Component({
   selector: 'app-dashboard',
@@ -30,6 +33,7 @@ export class DashboardComponent implements OnInit {
   public DashForm!: FormGroup;
   private unsubscriber = new Subject();
   private dashboardx!: Dashboard[];
+  private graficox!: GraficoCorretoras[];
   queryField = new FormControl();
   public buscaDados!: BuscaDados;
   constructor(
@@ -54,6 +58,7 @@ export class DashboardComponent implements OnInit {
   }
   @ViewChild("meuCanvasDias", { static: true }) elementoDias!: ElementRef;
   @ViewChild("meuCanvasCorretoras", { static: true }) elementoCorretoras!: ElementRef;
+  @ViewChild("meuCanvasTodasCorretoras", { static: true }) elementoDiasContador!: ElementRef;
 
   ngOnInit(){
     this.DashBusca();
@@ -181,6 +186,68 @@ export class DashboardComponent implements OnInit {
           }
         })
       })
+
+
+      this.DashboardService.GetFluxoVolumexVard(this.DashForm.value.dataini,this.DashForm.value.datafim,this.DashForm.value.sigla).pipe(takeUntil(this.unsubscriber))
+      .subscribe((grafico: GraficoCorretoras[]) => {
+        this.graficox = grafico;
+
+        var Colors: string[] =[]
+        var ListaNomeCorretora: string[] =[];
+        var ListaContadorAcerto: number[] = [];
+        var ListaPorcentagemAcerto: number[] = [];
+
+        for (let index = 0; index < this.graficox.length; index++) {
+          ListaNomeCorretora.push(this.graficox[index].nomeCorretora);
+          ListaContadorAcerto.push(this.graficox[index].contadorAcerto);
+          ListaPorcentagemAcerto.push(this.graficox[index].percentualAcerto);
+
+        }
+       
+        var dynamicColors = function() {
+          var r = Math.floor(Math.random() * 255);
+          var g = Math.floor(Math.random() * 255);
+          var b = Math.floor(Math.random() * 255);
+          return "rgb(" + r + "," + g + "," + b + ")";
+        }
+        var Fix1Colors = function() {
+          return "rgb(" + "23" + "," + "8E" + "," + "23" + ")";
+        }
+        var Fix2Colors = function() {
+          return "rgb(" + "FF" + "," + "00" + "," + "00" + ")";
+        }
+       
+        console.log(dynamicColors);
+
+        console.log(Fix1Colors);
+
+        var chart = new Chart(this.elementoDiasContador.nativeElement, {
+          type:'bar',
+          data:{
+            labels: ListaNomeCorretora,
+            datasets: [
+              {
+                  label: 'Quantidade_Acertos',
+                  data: ListaContadorAcerto,
+                  borderColor: '#00bfaf',
+                  backgroundColor: Fix1Colors,
+                
+              },
+              {
+                label: 'PorcentagemAcerto',
+                data: ListaPorcentagemAcerto,
+                borderColor: '#ffbbaa',
+                backgroundColor:dynamicColors,
+               
+              }
+            ]
+          },
+          options:{
+            events: ['click']
+          }
+        })
+      })
+
 
     }
     else

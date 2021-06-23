@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Dashboard } from '../models/Dashboard';
+import { GraficoCorretoras } from '../models/GraficoCorretoras';
 import { environment } from 'src/environments/environment';
 
 
@@ -27,5 +28,8 @@ export class DashboardService {
   }
   BuscaListaAcoes(): Observable<String[]>{
     return this.http.get<String[]>(`${this.baseURL}FluxoBolsa/BuscaListaAcoes`);
+  }
+  GetFluxoVolumexVard(DataIni:Date, DataFim:Date, Sigla:string): Observable<GraficoCorretoras[]>{
+    return this.http.get<GraficoCorretoras[]>(`${this.baseURL}FluxoBolsa/GetFluxoVolumexVard?Dataini=${DataIni}&DataFim=${DataFim}&Sigla=${Sigla}`);
   }
 }

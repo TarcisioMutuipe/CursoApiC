@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.Analysis;
 using SmartSchool.API.Data;
 using SmartSchool.API.Dtos;
+using SmartSchool.API.Helpers;
 using SmartSchool.API.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -61,7 +62,7 @@ namespace SmartSchool.API.Controllers
         public IActionResult BuscaFluxoCorretoras(DateTime DataIni, DateTime DataFim, string Sigla)
         {
             var Fluxo = _repo.GetFluxoCorretoras(DataIni, DataFim, Sigla);
-            if (Fluxo == null) return BadRequest("Professor não existe.");
+            if (Fluxo == null) return BadRequest("Não foi encontrado.");
 
             IList<RetornoFluxoDto> FluxoRetorno = new List<RetornoFluxoDto>();
 
@@ -79,11 +80,57 @@ namespace SmartSchool.API.Controllers
             return Ok(_mapper.Map<IEnumerable<RetornoFluxoDto>>(FluxoRetorno));
         }
 
+        [HttpGet("GetFluxoVolumexVard")]
+        public IActionResult GetFluxoVolumexVard(DateTime DataIni, DateTime DataFim, string Sigla)
+        {
+            var Fluxo = _repo.GetFluxoVolumexVard(DataIni, DataFim, Sigla);
+            if (Fluxo == null) return BadRequest("não existe.");
+
+            IList<RetornoTotalDiasVard> FluxoRetorno = new List<RetornoTotalDiasVard>();
+
+            foreach (DataRow item in Fluxo.Rows)
+            {
+                RetornoTotalDiasVard itemFluxo = new RetornoTotalDiasVard();
+                itemFluxo.Sigla = item[0].ToString();
+                itemFluxo.CodCorretora = item[1].ToString();                
+                itemFluxo.NomeCorretora = item[2].ToString();
+                itemFluxo.ContadorAcerto = Convert.ToInt32(item[3]);
+                itemFluxo.PercentualAcerto = Convert.ToDecimal(item[4]);
+                itemFluxo.VolumeCorretora = Convert.ToDouble(item[5]);
+                FluxoRetorno.Add(itemFluxo);
+            }
+            return Ok(_mapper.Map<IEnumerable<RetornoTotalDiasVard>>(FluxoRetorno));
+
+        }
+
+        [HttpGet("GetFluxoAcertivas")]
+        public IActionResult GetFluxoAcertivas(DateTime DataIni, DateTime DataFim,string corretora, [FromQuery] PageParams pageParams)
+        {
+            var Fluxo = _repo.GetFluxoAcertivas(DataIni, DataFim);
+            if (Fluxo == null) return BadRequest("não existe.");           
+
+            var items = Fluxo.Skip((pageParams.PageNumber - 1) * pageParams.PageSize)
+                                    .Take(pageParams.PageSize);                                    
+                
+            Response.AddPagination(pageParams.PageNumber, pageParams.PageSize, Fluxo.Count, (int)Math.Ceiling(Fluxo.Count / (double)pageParams.PageSize));
+
+            return Ok(_mapper.Map<IEnumerable<RetornoVariasInfoCorretoras>>(Fluxo));
+
+        }
+
+
         [HttpGet("BuscaListaAcoes")]
         public IActionResult BuscaListaAcoes()
         {
             var acoes = _repo.GetAllAcoesSigla();
             return Ok(acoes);
+        }
+
+        [HttpGet("BuscaListaCorretoras")]
+        public IActionResult BuscaListaCorretoras()
+        {
+            var corretoras = _repo.GetAllCorretoras();
+            return Ok(corretoras);
         }
 
         // GET: api/<FluxoBolsaController>

@@ -37,10 +37,6 @@
               "node_modules/ngx-toastr/toastr.css"
             ],
             "scripts": [
-              "../node_modules/1js/popper.min.js",
-              "../node_modules/1js/plugins.js",
-              "../node_modules/1js/main.js",
-              "../node_modules/jquery/dist/jquery.js"
             ]
           },
           "configurations": {

@@ -1,4 +1,5 @@
-﻿using SmartSchool.API.Helpers;
+﻿using SmartSchool.API.Dtos;
+using SmartSchool.API.Helpers;
 using SmartSchool.API.Models;
 using System;
 using System.Collections.Generic;
@@ -37,6 +38,9 @@ namespace SmartSchool.API.Data
         Professor[] GetProfessorByAlunoId(int Alunoid, bool incluirAlunos = false);
         DataTable GetFluxoDias(DateTime dataInicio, DateTime dataFim, string Sigla);
         DataTable GetFluxoCorretoras(DateTime dataInicio, DateTime dataFim, string Sigla);
+        DataTable GetFluxoVolumexVard(DateTime dataInicio, DateTime dataFim, string Sigla);
 
+        String[] GetAllCorretoras();
+        IList<RetornoVariasInfoCorretoras> GetFluxoAcertivas(DateTime dataInicio, DateTime dataFim);
     }
 }
