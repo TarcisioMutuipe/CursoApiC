@@ -41,6 +41,6 @@ namespace SmartSchool.API.Data
         DataTable GetFluxoVolumexVard(DateTime dataInicio, DateTime dataFim, string Sigla);
 
         String[] GetAllCorretoras();
-        IList<RetornoVariasInfoCorretoras> GetFluxoAcertivas(DateTime dataInicio, DateTime dataFim);
+        IList<RetornoVariasInfoCorretoras> GetFluxoAcertivas(DateTime dataInicio, DateTime dataFim, string corretora);
     }
 }

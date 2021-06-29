@@ -6,4 +6,6 @@ export class GraficoCorretoras {
   percentualAcerto: number= 0;
   volumeCorretora: number= 0;
   porcentagemVolume: number= 0;
+  contadorAcertoPositivo: number= 0;
+  contadorAcertoNegativo: number= 0;
 }

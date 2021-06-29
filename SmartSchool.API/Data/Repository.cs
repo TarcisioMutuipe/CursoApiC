@@ -248,7 +248,7 @@ ROUND(( SUM(case when (ff.volume < 0 and vard > 0) or (ff.volume > 0 and vard < 
             else return null;
         }
 
-        public IList<RetornoVariasInfoCorretoras> GetFluxoAcertivas(DateTime dataInicio, DateTime dataFim)
+        public IList<RetornoVariasInfoCorretoras> GetFluxoAcertivas(DateTime dataInicio, DateTime dataFim, string corretora)
         {
             var mConn = new MySql.Data.MySqlClient.MySqlConnection(Configuration.GetConnectionString("MySqlConnection"));
             try
@@ -262,28 +262,35 @@ ROUND(( SUM(case when (ff.volume < 0 and vard > 0) or (ff.volume > 0 and vard < 
             }
             if (mConn.State == ConnectionState.Open)
             {
-                var mAdapter = new MySqlCommand(
-                
-              
-                  String.Format("set @Sigla = '{0}' ;", "VVAR3") +
-                       @" SELECT Sigla,codCorretora,NomeCorretora,
+                string msSql =
+                   String.Format("set @Sigla = '{0}' ;", "VVAR3") +
+                        @" SELECT Sigla,codCorretora,NomeCorretora,
 ROUND(( SUM(case when (ff.volume < 0 and vard > 0) or (ff.volume > 0 and vard < 0) then 1 else 0 end) / Count(data)) * 100,2) as Porcental,
-SUM(case when (ff.volume < 0 and vard > 0) or (ff.volume > 0 and vard < 0) then 1 else 0 end) ,
- ROUND(SUM(ABS(ff.VOLUME))/ Count(data),2) as VolMedioCorretora,ROUND(SUM(ABS(ff.VOLUME))/ Count(data)/(sum(acoes.volume)/Count(data)),3) as Porcentagem
-
+SUM(case when (ff.volume < 0 and vard > 0) or (ff.volume > 0 and vard < 0) then 1 else 0 end) as AcertoGeral ,
+ ROUND(SUM(ABS(ff.VOLUME))/ Count(data),2) as VolMedioCorretora,
+ROUND(SUM(ABS(ff.VOLUME))/ Count(data)/(sum(acoes.volume)/Count(data)),3) as Porcentagem,
+SUM(case when (ff.volume < 0 and vard > 0) then 1 else 0 end) as AcertoAlta ,
+SUM(case when (ff.volume > 0 and vard < 0) then 1 else 0 end) as AcertoBaixa
                              FROM fluxobolsa ff inner join acoesInfo ac 
                             on (ff.AcoesInfoId = ac.Id )
                             inner join Acoes acoes on(acoes.AcoesInfoId = ac.id and data = DataPregao)
-                            where  data BETWEEN @dataIni and @dataFim                         
-							
-                            group by codCorretora,Sigla
+                            where  data BETWEEN @dataIni and @dataFim ";
+
+                            if (corretora != "")
+                            {
+                               msSql += " and NomeCorretora = @corretora ";
+                            }
+                 msSql += @" group by codCorretora,Sigla
 							having ((SUM(case when (ff.volume < 0 and vard > 0) or (ff.volume > 0 and vard < 0) then 1 else 0 end) / Count(data)) * 100) > 50
                             and (Count(data)/(Select count(datapregao) from acoes aco inner join acoesInfo ac 
                             on (aco.AcoesInfoId = ac.Id ) where datapregao BETWEEN @dataIni and @dataFim and @Sigla = Sigla)) = 1
                           and ROUND(SUM(ABS(ff.VOLUME))/ Count(data)/(sum(acoes.volume)/Count(data)),3) > 0.01
-                            order by Porcental desc ", mConn);
+                            order by Porcental desc ";
+
+                var mAdapter = new MySqlCommand(msSql , mConn);
                 mAdapter.Parameters.AddWithValue("@dataIni", dataInicio.ToString("yyyy-MM-dd"));
                 mAdapter.Parameters.AddWithValue("@dataFim", dataFim.ToString("yyyy-MM-dd"));
+                mAdapter.Parameters.AddWithValue("@corretora", corretora);
                 var datax = new DataSet();
                 RetornoFluxoDto retornof = new RetornoFluxoDto();
                 mAdapter.CommandTimeout = 200;
@@ -301,6 +308,8 @@ SUM(case when (ff.volume < 0 and vard > 0) or (ff.volume > 0 and vard < 0) then 
                     itemFluxo.PercentualAcerto = Convert.ToDecimal(dr[4]);
                     itemFluxo.VolumeCorretora = Convert.ToDouble(dr[5]);
                     itemFluxo.PorcentagemVolume = Convert.ToDouble(dr[6]);
+                    itemFluxo.ContadorAcertoPositivo = Convert.ToInt32(dr[7]);
+                    itemFluxo.ContadorAcertoNegativo = Convert.ToInt32(dr[8]);
                     FluxoRetorno.Add(itemFluxo);
                 }
 

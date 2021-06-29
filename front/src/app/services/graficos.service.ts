@@ -22,6 +22,7 @@ export class GraficosService {
   GetFluxoAcertivas(
     DataIni: Date,
     DataFim: DatepickerServiceInputs,
+    Corretoras: String,
     page?: number,
     itemsPerPage?: number
   ): Observable<PaginatedResult<GraficoCorretoras[]>> {
@@ -36,7 +37,7 @@ export class GraficosService {
 
     return this.http
       .get<GraficoCorretoras[]>(
-        `${this.baseURL}FluxoBolsa/GetFluxoAcertivas?Dataini=${DataIni}&DataFim=${DataFim}`,
+        `${this.baseURL}FluxoBolsa/GetFluxoAcertivas?Dataini=${DataIni}&DataFim=${DataFim}&corretora=${Corretoras}`,
         { observe: 'response', params }
       )
       .pipe(

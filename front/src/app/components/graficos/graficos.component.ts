@@ -15,6 +15,7 @@ import { DatePipe } from '@angular/common';
 import * as moment from 'moment';
 import { rendererTypeName } from '@angular/compiler';
 import { readJsonConfigFile } from 'typescript';
+import { CorretorasService } from '../../services/corretoras.service';
 
 @Component({
   selector: 'app-graficos',
@@ -23,7 +24,7 @@ import { readJsonConfigFile } from 'typescript';
   providers: [DatePipe],
 })
 export class GraficosComponent implements OnInit {
-  public acoess!: String[];
+  public corretoras!: String[];
   public today = Date.now();
   public GrafForm!: FormGroup;
   private unsubscriber = new Subject();
@@ -32,12 +33,14 @@ export class GraficosComponent implements OnInit {
   queryField = new FormControl();
   public buscaDados!: BuscaDados;
   constructor(
+    private corretorasService: CorretorasService,
     private graficosService: GraficosService,
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private toastr: ToastrService,
     private spinner: NgxSpinnerService
   ) {
+    this.BuscaListaCorretoras();
     this.criarForm();
   }
 
@@ -59,13 +62,20 @@ export class GraficosComponent implements OnInit {
     let d = new Date();
     return moment(d).format('DD/MM/YYYY');
   }
+  BuscaListaCorretoras():void {
+    this.corretorasService.BuscaListaCorretoras().pipe(takeUntil(this.unsubscriber))
+    .subscribe((returnCorretoras: String[]) => {
+      this.corretoras = returnCorretoras;
+    })
+  }
  pageChanged(event: any): void {
   this.pagination.currentPage = event.page;
   this.DashBusca();
   }
   DashBusca(): void {
       this.spinner.show();
-      this.graficosService.GetFluxoAcertivas(this.GrafForm.value.dataini,this.GrafForm.value.datafim,this.pagination.currentPage, this.pagination.itemsPerPage)
+      console.log(this.GrafForm.value)
+      this.graficosService.GetFluxoAcertivas(this.GrafForm.value.dataini,this.GrafForm.value.datafim,this.GrafForm.value.sigla,this.pagination.currentPage, this.pagination.itemsPerPage)
         .pipe(takeUntil(this.unsubscriber))
         .subscribe((grafic: PaginatedResult<GraficoCorretoras[]>) => {
           this.graficox = grafic.result;

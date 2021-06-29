@@ -15,6 +15,8 @@ namespace SmartSchool.API.Dtos
         public int ContadorAcerto { get; set; }    
         public double VolumeCorretora { get; set; }
         public double PorcentagemVolume { get; set; }
+        public int ContadorAcertoPositivo { get; set; }
+        public int ContadorAcertoNegativo { get; set; }
 
     }
 }

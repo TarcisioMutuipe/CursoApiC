@@ -38,7 +38,7 @@ export class CorretorasComponent implements OnInit {
     private toastr: ToastrService,
     private spinner: NgxSpinnerService
   ) {
-    this.BuscaListaAcoes();
+    this.BuscaListaCorretoras();
     this.criarForm();
 
   }
@@ -57,7 +57,7 @@ export class CorretorasComponent implements OnInit {
     this.pagination = { currentPage: 1, itemsPerPage: 4} as Pagination;
     this.DashBusca();
   }
-  BuscaListaAcoes():void {
+  BuscaListaCorretoras():void {
     this.CorretorasService.BuscaListaCorretoras().pipe(takeUntil(this.unsubscriber))
     .subscribe((returnAcoes: String[]) => {
       this.acoess = returnAcoes;

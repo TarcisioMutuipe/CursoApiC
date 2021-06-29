@@ -106,7 +106,7 @@ namespace SmartSchool.API.Controllers
         [HttpGet("GetFluxoAcertivas")]
         public IActionResult GetFluxoAcertivas(DateTime DataIni, DateTime DataFim,string corretora, [FromQuery] PageParams pageParams)
         {
-            var Fluxo = _repo.GetFluxoAcertivas(DataIni, DataFim);
+            var Fluxo = _repo.GetFluxoAcertivas(DataIni, DataFim, corretora);
             if (Fluxo == null) return BadRequest("não existe.");           
 
             var items = Fluxo.Skip((pageParams.PageNumber - 1) * pageParams.PageSize)
