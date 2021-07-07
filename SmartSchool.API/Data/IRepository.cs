@@ -8,16 +8,8 @@ using System.Threading.Tasks;
 
 namespace SmartSchool.API.Data
 {
-    public interface IRepository
+    public interface IRepository:IRepositoryBase
     {
-
-        void Add<T>(T entity) where T : class;
-
-        void Update<T>(T entity) where T : class;
-
-        void Delete<T>(T entity) where T : class;
-
-        bool SaveChanges();
 
         Task<PageList<Aluno>> GetAllAlunosAsync(PageParams pageParams, bool includeProfessor = false);
         Aluno[] GetAllAlunos(bool includeProfessor = false);
@@ -29,18 +21,9 @@ namespace SmartSchool.API.Data
         Professor[] GetAllProfessoresByDisciplinaId(int id, bool incluirAlunos = false);
         Professor GetProfessorById(int professorid, bool incluirAlunos = false);
         public Aluno[] ByDisciplina(int idDisciplina);
-        
-            void GravarFluxo();
-        String[] GetAllAcoesSigla();
-
-        int GetIdAcao(string acao);
 
         Professor[] GetProfessorByAlunoId(int Alunoid, bool incluirAlunos = false);
-        DataTable GetFluxoDias(DateTime dataInicio, DateTime dataFim, string Sigla);
-        DataTable GetFluxoCorretoras(DateTime dataInicio, DateTime dataFim, string Sigla);
-        DataTable GetFluxoVolumexVard(DateTime dataInicio, DateTime dataFim, string Sigla);
 
-        String[] GetAllCorretoras();
-        IList<RetornoVariasInfoCorretoras> GetFluxoAcertivas(DateTime dataInicio, DateTime dataFim, string corretora);
+
     }
 }

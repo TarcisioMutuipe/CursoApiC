@@ -56,6 +56,7 @@ export class DashboardComponent implements OnInit {
       sigla: ['', Validators.required]
     });
   }
+  @ViewChild("meuCanvasTodas", { static: true }) elementoTodas!: ElementRef;
   @ViewChild("meuCanvasDias", { static: true }) elementoDias!: ElementRef;
   @ViewChild("meuCanvasCorretoras", { static: true }) elementoCorretoras!: ElementRef;
   @ViewChild("meuCanvasTodasCorretoras", { static: true }) elementoDiasContador!: ElementRef;
@@ -82,6 +83,79 @@ export class DashboardComponent implements OnInit {
     }
 
     if (this.DashForm.valid) {
+      this.DashboardService.GetComparatodas(this.DashForm.value.dataini,this.DashForm.value.datafim).pipe(takeUntil(this.unsubscriber))
+      .subscribe((dashboard: Dashboard[]) => {
+        this.dashboardx = dashboard;
+
+        var ListaCorreoras: string[] =[];
+        var ListaVolumeMorgan: number[] = [];
+        var ListaAcoes: string[] =[];
+        var ListaVolumePrincipal: number[] = [];
+
+        for (let index = 0; index < this.dashboardx.length; index++) {
+          ListaCorreoras.push(this.dashboardx[index].quem);
+          if(index % 2 == 1){
+          ListaAcoes.push(this.dashboardx[index].sigla);
+          }
+          if(this.dashboardx[index].quem == "1-Principais"){
+          ListaVolumePrincipal.push(this.dashboardx[index].volumeCorretora);}
+          if(this.dashboardx[index].quem == "2-Morgan&JPMorgan"){
+          ListaVolumeMorgan.push(this.dashboardx[index].volumeCorretora);}
+
+        }
+        function getRandomColor() {
+          var letters = "0123456789ABCDEF".split("");
+          var color = "#";
+          for (var i = 0; i < 6; i++ ) {
+          color += letters[Math.floor(Math.random() * 16)];
+          }
+          return color;
+          }
+        console.log(ListaVolumePrincipal);
+        console.log(ListaVolumeMorgan);
+        console.log(ListaAcoes);
+        var chart = new Chart(this.elementoTodas.nativeElement, {
+          type:'bar',
+          data:{
+            labels:ListaAcoes,
+            datasets: [
+              {
+                  label: ListaCorreoras[0],
+                  data: ListaVolumePrincipal,
+                  borderColor: '#00008B',
+                  backgroundColor:['green','blue','yellow','red','blue','green','blue','yellow','red','blue','green','blue','yellow','red','blue','green','blue','yellow','red','blue'],
+                  fill: false,
+
+              },
+              {
+                label: ListaCorreoras[1],
+                data: ListaVolumeMorgan,
+                borderColor: '#00FF00',
+                backgroundColor:['green','blue','yellow','red','blue','green','blue','yellow','red','blue','green','blue','yellow','red','blue','green','blue','yellow','red','blue'],
+                fill: false,
+            },
+
+            ]
+          },
+          options:{
+            scales: {
+                yAxes: [{
+                  ticks: {
+                      min: -100000000,
+                      max: 100000000,
+                      stepSize: 3000000
+                  }
+                      }]
+                  }
+          }
+        })
+      })
+
+
+
+
+
+
       this.DashboardService.fluxoBolsaCorretoras(this.DashForm.value.dataini,this.DashForm.value.datafim,this.DashForm.value.sigla).pipe(takeUntil(this.unsubscriber))
       .subscribe((dashboard: Dashboard[]) => {
         this.dashboardx = dashboard;
@@ -203,7 +277,7 @@ export class DashboardComponent implements OnInit {
           ListaPorcentagemAcerto.push(this.graficox[index].percentualAcerto);
 
         }
-       
+
         var dynamicColors = function() {
           var r = Math.floor(Math.random() * 255);
           var g = Math.floor(Math.random() * 255);
@@ -216,7 +290,7 @@ export class DashboardComponent implements OnInit {
         var Fix2Colors = function() {
           return "rgb(" + "FF" + "," + "00" + "," + "00" + ")";
         }
-       
+
         console.log(dynamicColors);
 
         console.log(Fix1Colors);
@@ -231,14 +305,14 @@ export class DashboardComponent implements OnInit {
                   data: ListaContadorAcerto,
                   borderColor: '#00bfaf',
                   backgroundColor: Fix1Colors,
-                
+
               },
               {
                 label: 'PorcentagemAcerto',
                 data: ListaPorcentagemAcerto,
                 borderColor: '#ffbbaa',
                 backgroundColor:dynamicColors,
-               
+
               }
             ]
           },

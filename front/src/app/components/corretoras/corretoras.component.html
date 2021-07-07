@@ -11,8 +11,8 @@
         <input type="date" formControlName="datafim" id="DataFim" class="form-control">
       </div>
       <div class="form-group">
-        <label for="formGroupExampleInput">Corretoras</label>
-        <select class="form-control" id="Corretora" formControlName="corretora" class="form-control" ngModel
+        <label for="formGroupExampleInput">Sigla</label>
+        <select class="form-control" id="acoes" formControlName="sigla" class="form-control" ngModel
           (ngModelChange)="DashBusca()">
           <option *ngFor="let acoes of acoess" [ngValue]="acoes">{{acoes}}</option>
 
@@ -32,10 +32,9 @@
           <th scope="col">Sigla</th>
           <th scope="col">Código Corretora</th>
           <th scope="col">Nome Corretora</th>
-          <th scope="col">Percentual</th>
-          <th scope="col">Dias acertados</th>
+          <th scope="col">Dias Comprados</th>
+          <th scope="col">Dias Vendidos</th>
           <th scope="col">Volume Corretora</th>
-          <th scope="col">% Volume Corretora</th>
         </tr>
       </thead>
       <tbody>
@@ -44,10 +43,9 @@
           <td scope="row">{{grafic.sigla}}</td>
           <td>{{grafic.codCorretora}}</td>
           <td>{{grafic.nomeCorretora}}</td>
-          <td>{{grafic.contadorAcerto}}</td>
-          <td>{{grafic.percentualAcerto}}</td>
+          <td>{{grafic.contadorAcertoPositivo}}</td>
+          <td>{{grafic.contadorAcertoNegativo}}</td>
           <td>{{grafic.volumeCorretora}}</td>
-          <td>{{grafic.porcentagemVolume}}</td>
 
         </tr>
       </tbody>

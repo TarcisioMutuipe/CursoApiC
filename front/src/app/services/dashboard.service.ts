@@ -32,4 +32,7 @@ export class DashboardService {
   GetFluxoVolumexVard(DataIni:Date, DataFim:Date, Sigla:string): Observable<GraficoCorretoras[]>{
     return this.http.get<GraficoCorretoras[]>(`${this.baseURL}FluxoBolsa/GetFluxoVolumexVard?Dataini=${DataIni}&DataFim=${DataFim}&Sigla=${Sigla}`);
   }
+  GetComparatodas(DataIni:Date, DataFim:Date): Observable<Dashboard[]>{
+    return this.http.get<Dashboard[]>(`${this.baseURL}FluxoBolsa/GetComparatodas?Dataini=${DataIni}&DataFim=${DataFim}`);
+  }
 }

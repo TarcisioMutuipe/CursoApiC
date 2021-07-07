@@ -23,10 +23,10 @@ namespace SmartSchool.API.Controllers
     [ApiController]
     public class FluxoBolsaController : ControllerBase
     {
-        public readonly IRepository _repo;
+        public readonly IRepositoryBolsa _repo;
 
         public readonly IMapper _mapper;
-        public FluxoBolsaController(IRepository repo, IMapper mapper)
+        public FluxoBolsaController(IRepositoryBolsa repo, IMapper mapper)
         {
             _mapper = mapper;
             _repo = repo;
@@ -118,6 +118,41 @@ namespace SmartSchool.API.Controllers
 
         }
 
+
+        [HttpGet("GetDiasComprasdos")]
+        public IActionResult GetDiasComprasdos(DateTime DataIni, DateTime DataFim, string Sigla, [FromQuery] PageParams pageParams)
+        {
+            var Fluxo = _repo.GetDiasComprasdos(DataIni, DataFim, Sigla);
+            if (Fluxo == null) return BadRequest("não existe.");
+
+            var items = Fluxo.Skip((pageParams.PageNumber - 1) * pageParams.PageSize)
+                                    .Take(pageParams.PageSize);
+
+            Response.AddPagination(pageParams.PageNumber, pageParams.PageSize, Fluxo.Count, (int)Math.Ceiling(Fluxo.Count / (double)pageParams.PageSize));
+
+            return Ok(_mapper.Map<IEnumerable<RetornoVariasInfoCorretoras>>(Fluxo));
+
+        }
+
+        [HttpGet("GetComparatodas")]
+        public IActionResult GetComparatodas(DateTime DataIni, DateTime DataFim)
+        {
+            var Fluxo = _repo.GetComparatodas(DataIni, DataFim);
+            if (Fluxo == null) return BadRequest("Não foi encontrado.");
+
+            IList<RetornoFluxoDto> FluxoRetorno = new List<RetornoFluxoDto>();
+
+            foreach (DataRow item in Fluxo.Rows)
+            {
+                RetornoFluxoDto itemFluxo = new RetornoFluxoDto();
+                itemFluxo.Descricao = item[0].ToString();
+                itemFluxo.Sigla = item[1].ToString();
+                itemFluxo.Quem = item[2].ToString();
+                itemFluxo.VolumeCorretora = Convert.ToDouble(item[3]);              
+                FluxoRetorno.Add(itemFluxo);
+            }
+            return Ok(_mapper.Map<IEnumerable<RetornoFluxoDto>>(FluxoRetorno));
+        }
 
         [HttpGet("BuscaListaAcoes")]
         public IActionResult BuscaListaAcoes()

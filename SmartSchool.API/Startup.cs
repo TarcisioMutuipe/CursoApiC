@@ -43,7 +43,7 @@ namespace SmartSchool.API
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddScoped<IRepository, Repository>();
-
+            services.AddScoped<IRepositoryBolsa, RepositoryBolsa>();
             services.AddSwaggerGen(
                 opt =>
                 {

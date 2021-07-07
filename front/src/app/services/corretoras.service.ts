@@ -22,6 +22,9 @@ export class CorretorasService {
   BuscaListaCorretoras(): Observable<String[]>{
     return this.http.get<String[]>(`${this.baseURL}FluxoBolsa/BuscaListaCorretoras`);
   }
+  BuscaListaAcoes(): Observable<String[]>{
+    return this.http.get<String[]>(`${this.baseURL}FluxoBolsa/BuscaListaAcoes`);
+  }
 
   GetFluxoAcertivas(
     DataIni: Date,
@@ -56,4 +59,40 @@ export class CorretorasService {
         })
       );
   }
+
+
+  GetDiasComprasdos(
+    DataIni: Date,
+    DataFim: DatepickerServiceInputs,
+    sigla: String,
+    page?: number,
+    itemsPerPage?: number
+  ): Observable<PaginatedResult<GraficoCorretoras[]>> {
+    const paginatedResult: PaginatedResult<GraficoCorretoras[]> =
+      new PaginatedResult<GraficoCorretoras[]>();
+    let params = new HttpParams();
+    if (page != null && itemsPerPage != null) {
+      params = params.append('pageNumber', page.toString());
+      params = params.append('pageSize', itemsPerPage.toString());
+    }
+    // return this.http.get<GraficoCorretoras[]>(`${this.baseURL}FluxoBolsa/GetFluxoAcertivas?Dataini=${DataIni}&DataFim=${DataFim}`);
+
+    return this.http
+      .get<GraficoCorretoras[]>(
+        `${this.baseURL}FluxoBolsa/GetDiasComprasdos?Dataini=${DataIni}&DataFim=${DataFim}&Sigla=${sigla}`,
+        { observe: 'response', params }
+      )
+      .pipe(
+        map((response) => {
+          paginatedResult.result = response.body as any;
+          if (response.headers.get('Pagination') != null) {
+            paginatedResult.pagination = JSON.parse(
+              response.headers.get('Pagination') as any
+            );
+          }
+          return paginatedResult;
+        })
+      );
+  }
+
 }

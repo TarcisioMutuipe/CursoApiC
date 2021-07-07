@@ -38,7 +38,7 @@ export class CorretorasComponent implements OnInit {
     private toastr: ToastrService,
     private spinner: NgxSpinnerService
   ) {
-    this.BuscaListaCorretoras();
+    this.BuscaListaAcoes();
     this.criarForm();
 
   }
@@ -57,8 +57,8 @@ export class CorretorasComponent implements OnInit {
     this.pagination = { currentPage: 1, itemsPerPage: 4} as Pagination;
     this.DashBusca();
   }
-  BuscaListaCorretoras():void {
-    this.CorretorasService.BuscaListaCorretoras().pipe(takeUntil(this.unsubscriber))
+  BuscaListaAcoes():void {
+    this.CorretorasService.BuscaListaAcoes().pipe(takeUntil(this.unsubscriber))
     .subscribe((returnAcoes: String[]) => {
       this.acoess = returnAcoes;
     })
@@ -74,7 +74,8 @@ export class CorretorasComponent implements OnInit {
   }
   DashBusca(): void {
       this.spinner.show();
-      this.CorretorasService.GetFluxoAcertivas(this.GrafForm.value.dataini,this.GrafForm.value.datafim,this.GrafForm.value.corretora,this.pagination.currentPage, this.pagination.itemsPerPage)
+      console.log(this.GrafForm.value)
+      this.CorretorasService.GetDiasComprasdos(this.GrafForm.value.dataini,this.GrafForm.value.datafim,this.GrafForm.value.sigla,this.pagination.currentPage, this.pagination.itemsPerPage)
         .pipe(takeUntil(this.unsubscriber))
         .subscribe((grafic: PaginatedResult<GraficoCorretoras[]>) => {
           this.graficox = grafic.result;
